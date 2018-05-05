@@ -22,7 +22,12 @@ def wechat_auth():
         s = ''.join(s)
         if (hashlib.sha1(s).hexdigest() == signature):
             return make_response(echostr)
-    xml_recived = ET.fromstring(request.data)
+    print(request.data)
+    data = request.data
+    if type(data) == bytes:
+        data = data.decode('utf-8')
+    xml_recived = ET.fromstring(data)
+
     to_username = xml_recived.find("ToUserName").text
     from_username = xml_recived.find("FromUserName").text
     content = xml_recived.find("Content").text
