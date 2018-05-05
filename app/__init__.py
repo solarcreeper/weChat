@@ -8,8 +8,8 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
-        token = 'hello_ian'  # your token
-        query = request.args  # GET 方法附上的参数
+        token = 'hello_ian'
+        query = request.args
         signature = query.get('signature', '')
         timestamp = query.get('timestamp', '')
         nonce = query.get('nonce', '')
