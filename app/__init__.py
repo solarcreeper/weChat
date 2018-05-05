@@ -7,7 +7,7 @@ from flask import Flask, request, make_response
 app = Flask(__name__)
 
 
-@app.route('/test', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
         token = 'hello_ian'
