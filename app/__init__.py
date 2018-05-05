@@ -1,4 +1,3 @@
-# -*- coding:utf8 -*-
 import hashlib
 import time
 import xml.etree.ElementTree as ET
@@ -8,7 +7,7 @@ from flask import Flask, request, make_response
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/test', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
         token = 'hello_ian'
@@ -34,7 +33,7 @@ def wechat_auth():
     reply = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
     reply = reply % (from_username, to_username, str(int(time.time())), content)
     response = make_response(reply)
-    # response.content_type = 'application/xml'
+    response.content_type = 'application/xml'
     return response
 
 
