@@ -1,4 +1,5 @@
-# -*- coding:utf8 -*-
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
 import hashlib
 import sys
 import time
@@ -10,6 +11,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
+    app.logger.info(sys.getdefaultencoding())
     if request.method == 'GET':
         token = 'hello_ian'
         query = request.args
@@ -42,7 +44,6 @@ def wechat_auth():
 
 if __name__ == "__main__":
     app.debug = True
-    sys.setdefaultencoding('utf8')
     formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
     file_handler = logging.FileHandler('wechat_log.log')
     file_handler.setFormatter(formatter)
