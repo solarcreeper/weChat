@@ -25,4 +25,4 @@ def content_parse(collection, content, from_user):
         if 'situp' in parser:
             record['situp'] = data['situp']
         obj_id = collection.save(record)
-    return content
+    return content.encode('utf-8')
