@@ -8,13 +8,6 @@ from flask import Flask, request, make_response
 import logging
 app = Flask(__name__)
 
-logger = logging.getLogger("wechat_log")
-formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
-file_handler = logging.FileHandler('wechat_log.log')
-file_handler.setFormatter(formatter)
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setFormatter(formatter)
-
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
@@ -31,9 +24,9 @@ def wechat_auth():
             return make_response(echostr)
     else:
         data = request.data
-        logger.debug(data)
         if type(data) == bytes:
             data = data.decode('utf-8')
+        app.logger.debug(data)
         xml_recived = ET.fromstring(data)
 
         to_username = xml_recived.find("ToUserName").text
@@ -48,4 +41,12 @@ def wechat_auth():
 
 
 if __name__ == "__main__":
+    app.debug = True
+    formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+    file_handler = logging.FileHandler('wechat_log.log')
+    file_handler.setFormatter(formatter)
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(formatter)
+    app.logger.addHandler(file_handler)
+    app.logger.addHandler(console_handler)
     app.run()
