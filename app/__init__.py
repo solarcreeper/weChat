@@ -21,7 +21,7 @@ def wechat_auth():
         echostr = query.get('echostr', '')
         s = [timestamp, nonce, token]
         s.sort()
-        s = ''.join(s)
+        s = ''.join(s).encode('utf-8`')
         if (hashlib.sha1(s).hexdigest() == signature):
             return make_response(echostr)
     else:
