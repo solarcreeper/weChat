@@ -24,8 +24,6 @@ def wechat_auth():
         data = request.data
         # if type(data) == bytes:
         #     data = data.decode('utf-8')
-        if data is None:
-            raise ("data is none")
         xml_recived = ET.fromstring(data)
 
         to_username = xml_recived.find("ToUserName").text
