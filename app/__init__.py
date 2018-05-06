@@ -1,12 +1,19 @@
 # -*- coding:utf8 -*-
 import hashlib
+import sys
 import time
 import xml.etree.ElementTree as ET
 
 from flask import Flask, request, make_response
-
+import logging
 app = Flask(__name__)
 
+logger = logging.getLogger("wechat_log")
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
+file_handler = logging.FileHandler('wechat_log.log')
+file_handler.setFormatter(formatter)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter)
 
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
@@ -24,6 +31,7 @@ def wechat_auth():
             return make_response(echostr)
     else:
         data = request.data
+        logger.debug(data)
         if type(data) == bytes:
             data = data.decode('utf-8')
         xml_recived = ET.fromstring(data)
