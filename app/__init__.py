@@ -42,6 +42,7 @@ def wechat_auth():
 
 if __name__ == "__main__":
     app.debug = True
+    sys.setdefaultencoding('utf8')
     formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
     file_handler = logging.FileHandler('wechat_log.log')
     file_handler.setFormatter(formatter)
