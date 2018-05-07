@@ -10,16 +10,28 @@ def content_parse(collection, content, from_user):
         return content
 
     record_templete = {'user': from_user, 'timestamp': time.strftime("%Y-%m-%d", time.localtime())}
-    record = collection.find_one(record_templete)
-    if record is None:
-        record = record_templete
+    if len(parsed_record) == 1:
+        content = run_qr(collection, parsed_record, record_templete)
+    else:
+        content = run_upadte(collection, parsed_record, record_templete)
 
-    record.update(parsed_record)
-    obj_id = collection.save(record)
-    content = u'记录数据完成:【%s】\n' % str(parsed_record)
     if len(parsed_not_allowd_record) > 0:
         content = content + u'以下数据格式不正确【%s】' % str(parsed_not_allowd_record)
     return content
+
+def run_qr(collection, parser,record_templete):
+    record = collection.find_one(record_templete)
+    if parser[0] == 'r':
+        collection.remove(record)
+        content = u'删除记录【%s】' %record
+    else:
+        content = u'查询结果【%s】' %record
+    return content
+
+def run_upadte(collection, parser, record_templete):
+    record = collection.find_one(record_templete)
+    record.update(parser)
+    return u'更新记录【%s】' %record
 
 def check_content(content):
     parser = content.split(' ')
