@@ -58,6 +58,10 @@ def check_content(content):
                     parser_result = u'使用{record bike|situp|flat num} or {record q|r}格式进行记录'
                     ckeck = False
                     break
+                elif not str.isdigit(parser[i+1]):
+                    parser_result = u'使用{record bike|situp|flat num} or {record q|r}格式进行记录'
+                    ckeck = False
+                    break
                 else:
                     i = i + 2
         else:
