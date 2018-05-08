@@ -12,6 +12,7 @@ from app.models import content_parse
 mongo = MongoClient('localhost', 27017)
 db = mongo.fitness
 
+
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
     if request.method == 'GET':
@@ -40,3 +41,8 @@ def wechat_auth():
         response = make_response(reply)
         response.content_type = 'application/xml'
         return response
+
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    pass
