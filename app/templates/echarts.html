@@ -13,10 +13,12 @@
     });
 
     require(
-        ['echarts',
-            'echarts/chart/bar'],
+        [
+            'echarts',
+            'echarts/chart/bar'
+        ],
         function (ec) {
-            var myChart = ec.int(document.getElementById('main'));
+            var myChart = ec.init(document.getElementById('main'));
             var option = {
                 tooltip: {
                     show: true
