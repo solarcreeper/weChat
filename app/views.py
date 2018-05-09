@@ -3,7 +3,7 @@
 import hashlib
 import time
 import xml.etree.ElementTree as ET
-from flask import request, make_response
+from flask import request, make_response, render_template
 from app import app
 from pymongo import *
 
@@ -43,6 +43,6 @@ def wechat_auth():
         return response
 
 
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index')
 def index():
-    pass
+    return render_template('echarts.html')
