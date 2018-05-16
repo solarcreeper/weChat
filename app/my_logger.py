@@ -5,9 +5,9 @@ from time import strftime
 import logging
 
 def init_logger(level, log_name=None):
-    FLASK_LOG_DIR = os.path.join(os.getenv("HOME"), 'log/flask/log_{}'.format(strftime('%Y%m%d')))
+    FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log', 'log_{}'.format(strftime('%Y%m%d')))
 
-    if os.path.exists(os.path.dirname(FLASK_LOG_DIR)):
+    if not os.path.exists(os.path.dirname(FLASK_LOG_DIR)):
         os.makedirs(os.path.dirname(FLASK_LOG_DIR))
 
     logger = logging.getLogger(log_name)

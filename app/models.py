@@ -90,7 +90,7 @@ def _list2dict(l):
 
 
 def _str2digital(str):
-    if str.isdigit(str):
+    if str.isdigit():
         return True
     try:
         float(str)
