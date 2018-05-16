@@ -21,9 +21,9 @@ def init_logger(level, log_name=None):
 
     if not os.path.exists(FLASK_LOG_DIR):
         os.makedirs(FLASK_LOG_DIR)
-    FLASK_LOG_FILE = os.path.join(FLASK_LOG_DIR, 'log_{}.log'.format(strftime('%Y%m%d_%H%M%S')))
+    FLASK_LOG_FILE = os.path.join(FLASK_LOG_DIR, 'log_{}.log'.format(strftime('%Y%m%d')))
 
-    open(FLASK_LOG_FILE, 'w+').close()
+    open(FLASK_LOG_FILE, 'a').close()
     logger = logging.getLogger(log_name)
     logger.setLevel(level)
 
