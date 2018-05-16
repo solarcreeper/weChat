@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-import os
+import os,stat
 from time import strftime
 import logging
 
@@ -9,6 +9,7 @@ def init_logger(level, log_name=None):
 
     if not os.path.exists(os.path.dirname(FLASK_LOG_DIR)):
         os.makedirs(os.path.dirname(FLASK_LOG_DIR))
+        os.chmod(FLASK_LOG_DIR, stat.S_IWOTH)
 
     logger = logging.getLogger(log_name)
     logger.setLevel(level)
