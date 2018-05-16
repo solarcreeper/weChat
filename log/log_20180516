@@ -1,6 +1,0 @@
-[2018-05-16 16:48:23,851 models.py:9] - content parse: content is [record bike 1 situp 2.2] from_user [ogWVh0XdaN5Wm0twTaQbkER8KRSc]
-[2018-05-16 16:48:23,867 models.py:42] - check content: content is [record bike 1 situp 2.2]
-[2018-05-16 16:49:09,597 models.py:9] - content parse: content is [record bike 1 situp 2.2] from_user [ogWVh0XdaN5Wm0twTaQbkER8KRSc]
-[2018-05-16 16:49:09,613 models.py:42] - check content: content is [record bike 1 situp 2.2]
-[2018-05-16 16:49:41,219 models.py:9] - content parse: content is [record bike 1 situp 2.2] from_user [ogWVh0XdaN5Wm0twTaQbkER8KRSc]
-[2018-05-16 16:49:41,219 models.py:42] - check content: content is [record bike 1 situp 2.2]
