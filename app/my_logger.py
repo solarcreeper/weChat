@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-import os,stat
-from time import strftime
+import os, stat
 import logging
 
+
 def init_logger(level, log_name=None):
-    FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log', 'log_{}'.format(strftime('%Y%m%d')))
+    FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
 
     if not os.path.exists(os.path.dirname(FLASK_LOG_DIR)):
         os.makedirs(os.path.dirname(FLASK_LOG_DIR))
@@ -21,5 +21,6 @@ def init_logger(level, log_name=None):
     logger.addHandler(file_handler)
 
     return logger
+
 
 logger = init_logger(logging.DEBUG, log_name="flask")
