@@ -7,8 +7,8 @@ import logging
 def init_logger(level, log_name=None):
     FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
 
-    if not os.path.exists(os.path.dirname(FLASK_LOG_DIR)):
-        os.makedirs(os.path.dirname(FLASK_LOG_DIR))
+    if not os.path.exists(FLASK_LOG_DIR):
+        os.makedirs(FLASK_LOG_DIR)
         os.chmod(FLASK_LOG_DIR, stat.S_IWOTH)
 
     logger = logging.getLogger(log_name)
