@@ -6,10 +6,10 @@ import logging
 
 
 def init_logger(level, log_name=None):
-    FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
+    FLASK_LOG_DIR = os.path.abspath('.')
 
-    if not os.path.exists(FLASK_LOG_DIR):
-        os.makedirs(FLASK_LOG_DIR)
+    # if not os.path.exists(FLASK_LOG_DIR):
+    #     os.makedirs(FLASK_LOG_DIR)
 
     FLASK_LOG_FILE = os.path.join(FLASK_LOG_DIR, 'log_{}'.format(strftime('%Y%m%d_%H%M%S')))
 
