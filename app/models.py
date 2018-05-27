@@ -12,18 +12,21 @@ def content_parse(collection, content, from_user):
         return parser_result
 
     record_templete = {'user': from_user, 'timestamp': time.strftime("%Y-%m-%d", time.localtime())}
-    if parser_result[0] in ['q', 'r']:
-        content = run_qr(collection, parser_result, record_templete)
+    if parser_result[0] in ['q', 'r', 'a']:
+        content = run_qra(collection, parser_result, record_templete)
     else:
         content = run_upadte(collection, parser_result, record_templete)
     return content
 
 
-def run_qr(collection, parser, record_templete):
+def run_qra(collection, parser, record_templete):
     record = collection.find_one(record_templete)
     if parser[0] == 'r':
         collection.remove(record)
         content = u'删除记录【%s】' % record
+    elif parser[0] == 'a':
+        record = collection.find_all()
+        content = u'查询结果【%s】' % record
     else:
         content = u'查询结果【%s】' % record
     return content
@@ -66,7 +69,7 @@ def check_content(content):
                     parser_result = u'使用{record bike|situp|flat num} or {record q|r}格式进行记录'
                     ckeck = False
                     break
-                elif not _str2digital(parser[i+1]):
+                elif not _str2digital(parser[i + 1]):
                     logger.info("invalid value [%s] in command [%s]" % (parser[i], content))
                     parser_result = u'使用{record bike|situp|flat num} or {record q|r}格式进行记录'
                     ckeck = False
@@ -97,5 +100,3 @@ def _str2digital(str):
         return True
     except ValueError:
         return False
-
-

@@ -41,8 +41,3 @@ def wechat_auth():
         response = make_response(reply)
         response.content_type = 'application/xml'
         return response
-
-
-@app.route('/index')
-def index():
-    return render_template('echarts.html')

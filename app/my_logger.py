@@ -7,13 +7,6 @@ import platform
 
 
 def init_logger(level, log_name=None):
-    # if (os.getenv("HOME") is None):
-    #     FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
-    # else:
-    #     FLASK_LOG_DIR = os.path.join(os.getenv('HOME'), 'log')
-    #
-
-
     if platform.platform().startswith("Windows"):
         FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
     else:
