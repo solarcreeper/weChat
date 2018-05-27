@@ -13,7 +13,7 @@ def content_parse(collection, content, from_user):
 
     record_templete = {'user': from_user, 'timestamp': time.strftime("%Y-%m-%d", time.localtime())}
     if parser_result[0] in ['q', 'r', 'a']:
-        content = run_qra(collection, parser_result, record_templete)
+       content = run_qra(collection, parser_result, record_templete)
     else:
         content = run_upadte(collection, parser_result, record_templete)
     return content
@@ -25,7 +25,10 @@ def run_qra(collection, parser, record_templete):
         collection.remove(record)
         content = u'删除记录【%s】' % record
     elif parser[0] == 'a':
-        record = collection.find_all()
+        result = collection.find()
+        record = ""
+        for r in result:
+            record = record + str(r)
         content = u'查询结果【%s】' % record
     else:
         content = u'查询结果【%s】' % record
@@ -52,7 +55,7 @@ def check_content(content):
     ckeck = True
     parser_result = None
     if len(parser) == 2:
-        if parser[1] in ['q', 'r']:
+        if parser[1] in ['q', 'r', 'a']:
             logger.info("input command is [%s]" % parser[1])
             parser_result = parser[1:]
         else:
