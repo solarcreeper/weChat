@@ -29,7 +29,11 @@ def get_response(params, collection, user):
         return process_command_u(collection, params['time'], user)
     if params['command'] == 'q':
         return process_command_q(collection, params['time'], user)
+    if params['command'] == 'qa':
+        return process_command_p(collection, params['time'], user)
     if params['command'] == 'p':
+        return process_command_p(collection, params['time'], user)
+    if params['command'] == 'pa':
         return process_command_p(collection, params['time'], user)
 
 
@@ -55,7 +59,7 @@ def process_command_u(db_collection, str_time, user):
 def process_command_q(db_collection, str_time, user):
     if str_time is None:
         str_time = get_time("%Y-%m-%d")
-        logger.info("query time is None, reset to" % str_time)
+        logger.info("query time is None, reset to %s" % str_time)
     if is_valid_date_format(str_time, "%Y-%m-%d") or is_valid_date_format(str_time, "%Y-%m"):
         logger.info("query record user:%s time:%s" %(user, str_time))
         result = db_collection.find(format_data(user, re.compile(str_time)))
@@ -67,10 +71,16 @@ def process_command_q(db_collection, str_time, user):
     else:
         return u'格式错误\r\n{q 查询当日记录时间: q\r\nq date 查询指定日期|月份记录时间: q 2019-01-01 | q 2019-01}'
 
+def process_command_qa(db_collection, str_time, user):
+    return 'todo'
+
 
 def process_command_p(collection, str_time, user):
     return 'todo'
 
+
+def process_command_pa(collection, str_time, user):
+    return 'todo'
 
 def format_data(user, str_time):
     return {'user': user, 'time': str_time}
@@ -136,18 +146,18 @@ if __name__ == '__main__':
     from app.views import db
 
     collection = db.test
+    collection.drop()
     from_user = 'test'
     test_command = [
         '?',
         'r',
-        'u 2019-02-23 12:12',
         'q',
         'u 2019-02-23 10:12',
-        'qa',
-        'q 2019-02',
-        'q 2019-02-23',
-        'p',
-        'pa',
+        # 'u 2019-02-23 10:12',
+        # 'q 2019-02',
+        # 'q 2019-02-23',
+        # 'p',
+        # 'pa',
     ]
     for c in test_command:
         print(content_parse(collection, c, from_user))
