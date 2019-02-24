@@ -33,31 +33,36 @@ def get_response(params, collection, user):
         return process_command_p(collection, params['time'], user)
 
 
-def process_command_r(collection, str_time, user):
+def process_command_r(db_collection, str_time, user):
     if str_time is not None:
         return u'格式错误，{r 自动记录当前时间: r}'
+    logger.info("record user: %s time: %s" % (user, str_time))
     current_time = get_time()
-    collection.save(format_data(user, current_time))
+    db_collection.save(format_data(user, current_time))
     return u'新增记录：%s' % current_time
 
 
-def process_command_u(collection, str_time, user):
+def process_command_u(db_collection, str_time, user):
     if is_valid_date_format(str_time, "%Y-%m-%d %H:%M:%S") or is_valid_date_format(str_time, "%Y-%m-%d %H:%M"):
-        collection.save(format_data(user, str_time))
+        logger.info("new record: user:%s str_time:%s" % (user, str_time))
+        db_collection.save(format_data(user, str_time))
         return u'新增记录：%s' % str_time
     else:
+        logger.info("param format error: user:%s str_time:%s" % (user, str_time))
         return u'格式错误\r\n{u datetime 强制记录指定时间: u 2019-01-01 12:12}'
 
 
-def process_command_q(collection, str_time, user):
+def process_command_q(db_collection, str_time, user):
     if str_time is None:
         str_time = get_time("%Y-%m-%d")
-
+        logger.info("query time is None, reset to" % str_time)
     if is_valid_date_format(str_time, "%Y-%m-%d") or is_valid_date_format(str_time, "%Y-%m"):
-        result = collection.find(format_data(user, re.compile(str_time)))
+        logger.info("query record user:%s time:%s" %(user, str_time))
+        result = db_collection.find(format_data(user, re.compile(str_time)))
         response = ""
         for r in result:
             response = response + r['time'] + '\r\n'
+        logger.info("query result for user:%s time:%s is %s" %(user, str_time, response))
         return response
     else:
         return u'格式错误\r\n{q 查询当日记录时间: q\r\nq date 查询指定日期|月份记录时间: q 2019-01-01 | q 2019-01}'
@@ -129,6 +134,7 @@ def is_valid_date(str_date):
 
 if __name__ == '__main__':
     from app.views import db
+
     collection = db.test
     from_user = 'test'
     test_command = [
