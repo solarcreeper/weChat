@@ -7,11 +7,11 @@ from flask import request, make_response, render_template
 from app import app
 from pymongo import *
 
-from app.models import content_parse
+from app.time_record import content_parse
 
 mongo = MongoClient('localhost', 27017)
-db = mongo.fitness
-
+db = mongo.time_record
+collection = db.users
 
 @app.route('/', methods=['GET', 'POST'])
 def wechat_auth():
@@ -35,7 +35,7 @@ def wechat_auth():
         from_username = xml_recived.find("FromUserName").text
         content = xml_recived.find("Content").text
 
-        content_resonse = content_parse(db.record, content, from_username)
+        content_resonse = content_parse(collection, content, from_username)
         reply = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
         reply = reply % (from_username, to_username, str(int(time.time())), content_resonse)
         response = make_response(reply)

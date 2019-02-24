@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 import time
-
-from .my_logger import logger
+from app.my_logger import logger
 
 
 def content_parse(collection, content, from_user):
