@@ -10,7 +10,7 @@ def init_logger(level, log_name=None):
     if platform.platform().startswith("Windows"):
         FLASK_LOG_DIR = os.path.join(os.path.abspath('.'), 'log')
     else:
-        FLASK_LOG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'log')
+        FLASK_LOG_DIR = os.path.join(os.path.abspath(os.path.dirname(__name__)), 'log')
 
     if not os.path.exists(FLASK_LOG_DIR):
         os.makedirs(FLASK_LOG_DIR)
