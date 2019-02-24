@@ -61,29 +61,70 @@ def process_command_q(db_collection, str_time, user):
         str_time = get_time("%Y-%m-%d")
         logger.info("query time is None, reset to %s" % str_time)
     if is_valid_date_format(str_time, "%Y-%m-%d") or is_valid_date_format(str_time, "%Y-%m"):
-        logger.info("query record user:%s time:%s" %(user, str_time))
+        logger.info("query record user:%s time:%s" % (user, str_time))
         result = db_collection.find(format_data(user, re.compile(str_time)))
         response = ""
         for r in result:
             response = response + r['time'] + '\r\n'
-        logger.info("query result for user:%s time:%s is %s" %(user, str_time, response))
+        logger.info("query result for user:%s time:%s is %s" % (user, str_time, response))
         return response
     else:
         return u'格式错误\r\n{q 查询当日记录时间: q\r\nq date 查询指定日期|月份记录时间: q 2019-01-01 | q 2019-01}'
 
+
 def process_command_qa(db_collection, str_time, user):
-    return 'todo'
+    if str_time is not None:
+        return u'格式错误\r\n{qa 查询所有记录时间: qa}'
+
+    result = db_collection.find(format_data(user))
+    response = ""
+    for r in result:
+        response = response + r['time'] + '\r\n'
+    logger.info("query result for user:%s time:%s is %s" % (user, str_time, response))
+    return response
 
 
-def process_command_p(collection, str_time, user):
-    return 'todo'
+def process_command_p(db_collection, str_time, user):
+    if str_time is None:
+        str_time = get_time("%Y-%m-%d")
+        logger.info("query time is None, reset to %s" % str_time)
+    if not (is_valid_date_format(str_time, "%Y-%m-%d") or is_valid_date_format(str_time, "%Y-%m")):
+        return u'格式错误\r\n{q 2019-01-01 | q 2019-01| q}'
+    if is_valid_date_format(str_time, "%Y-%m-%d"):
+        logger.info("query report for day:%s" % str_time)
+        result = db_collection.find(format_data(user, str_time))
+        days = []
+        for r in result:
+            days.append(r['time'])
+        if len(days) == 0:
+            return u'无当日数据:%s' % str_time
+        else:
+            early = min(days)
+
+    if is_valid_date_format(str_time, "%Y-%m"):
+        logger.info("query report for month:%s" % str_time)
 
 
 def process_command_pa(collection, str_time, user):
     return 'todo'
 
-def format_data(user, str_time):
-    return {'user': user, 'time': str_time}
+
+def format_data(user, str_time=None):
+    if str_time is None:
+        return {'user': user}
+    else:
+        return {'user': user, 'time': str_time}
+
+
+def get_timestamp(str_time):
+    if is_valid_date_format(str_time, "%Y-%m-%d %H:%M"):
+        str_time = str_time + ':00'
+    time_array = time.strptime(str_time, "%Y-%m-%d %H:%M:%S")
+    return time.mktime(time_array)
+
+
+def get_time_str(timestamp):
+    return datetime.datetime.fromtimestamp(timestamp, pytz.timezone('Asia/Chongqing')).strftime('%Y-%m-%d %H:%M:%S')
 
 
 def check_format(content):
@@ -142,7 +183,15 @@ def is_valid_date(str_date):
         return False
 
 
+def test():
+    time1 = get_timestamp('2019-02-23 10:12')
+    time2 = datetime.datetime.fromtimestamp(time1, pytz.timezone('Asia/Chongqing')).strftime('%Y-%m-%d %H:%M:%S')
+
+    pass
+
+
 if __name__ == '__main__':
+    test()
     from app.views import db
 
     collection = db.test
