@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
+import re
 import time
 import pytz
 import datetime
@@ -15,7 +16,8 @@ def content_parse(collection, content, from_user):
     if command['error_code'] != RECORD_OK:
         response = u'不支持该命令\r\nr自动记录当前时间: r\r\nu datetime 强制记录指定时间: u 2019-01-01 12:12\r\nq 查询当日记录时间: q\r\nq date 查询指定日期|月份记录时间: q 2019-01-01 | q 2019-01\r\nqa 查询所有记录时间\r\np 查询当日报告\r\np date 查询指定日期|月份报告: q 2019-01-01 | q 2019-01\r\npa 查询所有月份报告'
     else:
-        pass
+        response = get_response(command, collection, from_user)
+    return response
 
 
 def get_response(params, collection, user):
@@ -52,7 +54,10 @@ def process_command_q(collection, str_time, user):
         str_time = get_time("%Y-%m-%d")
 
     if is_valid_date_format(str_time, "%Y-%m-%d") or is_valid_date_format(str_time, "%Y-%m"):
-        response = collection.find(format_data(user, '\\%s\\' % str_time))
+        result = collection.find(format_data(user, re.compile(str_time)))
+        response = ""
+        for r in result:
+            response = response + r['time'] + '\r\n'
         return response
     else:
         return u'格式错误\r\n{q 查询当日记录时间: q\r\nq date 查询指定日期|月份记录时间: q 2019-01-01 | q 2019-01}'
@@ -86,16 +91,16 @@ def check_format(content):
     return response
 
 
-def get_time(format=None):
-    if format:
-        return datetime.datetime.now(pytz.timezone('Asia/Chongqing')).strftime(format)
+def get_time(format_str=None):
+    if format_str:
+        return datetime.datetime.now(pytz.timezone('Asia/Chongqing')).strftime(format_str)
     else:
         return datetime.datetime.now(pytz.timezone('Asia/Chongqing')).strftime("%Y-%m-%d %H:%M")
 
 
 def is_valid_date_format(str_date, format_str):
     try:
-        time.strftime(str_date, format_str)
+        time.strptime(str_date, format_str)
         return True
     except Exception as e:
         print(e)
@@ -123,12 +128,20 @@ def is_valid_date(str_date):
 
 
 if __name__ == '__main__':
-    # print(check_format('q 2019-01-01 12:12:12'))
-    # print(check_format('q 2019-01-01'))
-    # print(check_format('q 2019-01'))
-    # print(check_format('q 2019-01-01 12:12 1'))
-    # print(check_format('q 2019-01-01 12:1'))
-    # print(check_format('q 2019-01 12:12'))
-    # print(check_format('q 2019-01-01 1:12'))
-    # print(check_format('r'))
-    print(check_format('r 2019-01-01 11:12'))
+    from app.views import db
+    collection = db.test
+    from_user = 'test'
+    test_command = [
+        '?',
+        'r',
+        'u 2019-02-23 12:12',
+        'q',
+        'u 2019-02-23 10:12',
+        'qa',
+        'q 2019-02',
+        'q 2019-02-23',
+        'p',
+        'pa',
+    ]
+    for c in test_command:
+        print(content_parse(collection, c, from_user))
