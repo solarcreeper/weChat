@@ -47,12 +47,14 @@ def process_command_r(db_collection, str_time, user):
 
 
 def process_command_u(db_collection, str_time, user):
-    if is_valid_date_format(str_time, "%Y-%m-%d %H:%M:%S") or is_valid_date_format(str_time, "%Y-%m-%d %H:%M"):
+    if is_valid_date_format(str_time, "%Y-%m-%d %H:%M:%S"):
+        str_time = str_time[:-3]
+    if is_valid_date_format(str_time, "%Y-%m-%d %H:%M"):
         logger.info("new record: user:%s str_time:%s" % (user, str_time))
         db_collection.save(format_data(user, str_time))
-        return u'新增记录：%s' % str_time
+        return u'新增记录：%s' % str_time + ':00'
     else:
-        logger.info("param format error: user:%s str_time:%s" % (user, str_time))
+        logger.info("param format error: user:%s str_time:%s" % (user, str_time + ':00'))
         return u'格式错误\r\n{u datetime 强制记录指定时间: u 2019-01-01 12:12}'
 
 
@@ -85,6 +87,20 @@ def process_command_qa(db_collection, str_time, user):
 
 
 def process_command_p(db_collection, str_time, user):
+    def get_day_worktime(str_time):
+        result = db_collection.find(format_data(user, re.compile(str_time)))
+        days = []
+        for r in result:
+            days.append(r['time'])
+        if len(days) == 0:
+            return 0
+        else:
+            early = min(days)
+            late = max(days)
+            work_time = float((datetime.datetime.strptime(late, "%Y-%m-%d %H:%M") - datetime.datetime.strptime(early,"%Y-%m-%d %H:%M")).seconds) / 3600
+            logger.info('%s work for %s hours' %(str_time, work_time))
+            return work_time
+
     if str_time is None:
         str_time = get_time("%Y-%m-%d")
         logger.info("query time is None, reset to %s" % str_time)
@@ -92,18 +108,22 @@ def process_command_p(db_collection, str_time, user):
         return u'格式错误\r\n{q 2019-01-01 | q 2019-01| q}'
     if is_valid_date_format(str_time, "%Y-%m-%d"):
         logger.info("query report for day:%s" % str_time)
-        result = db_collection.find(format_data(user, str_time))
-        days = []
-        for r in result:
-            days.append(r['time'])
-        if len(days) == 0:
-            return u'无当日数据:%s' % str_time
-        else:
-            early = min(days)
-
+        work_time = get_day_worktime(str_time)
+        return u'在%s工作了%s小时' % (str_time, work_time)
     if is_valid_date_format(str_time, "%Y-%m"):
         logger.info("query report for month:%s" % str_time)
-
+        workday = 0
+        all_time = 0
+        for i in range(1, 32):
+            if i < 10:
+                day_str = '0%s' % str(i)
+            else:
+                day_str = str(i)
+            work_time = get_day_worktime('%s-%s' %(str_time, day_str))
+            if work_time != 0:
+                workday = workday + 1
+                all_time = all_time + work_time
+        return u'在%s工作了%s小时，加班%s小时' % (str_time, all_time, all_time - workday * 8)
 
 def process_command_pa(collection, str_time, user):
     return 'todo'
@@ -201,7 +221,19 @@ if __name__ == '__main__':
         '?',
         'r',
         'q',
-        'u 2019-02-23 10:12',
+        'u 2019-02-24 10:12:11',
+        'u 2019-02-24 12:12',
+        'u 2019-02-24 14:12',
+        'u 2019-02-24 15:12',
+        'u 2019-02-25 10:12',
+        'u 2019-02-25 12:12',
+        'u 2019-02-25 13:12',
+        'u 2019-02-25 14:12',
+        'u 2019-02-25 20:12:12',
+        'p',
+        'p 2019-02-25',
+        'p 2019-02',
+        'pa',
         # 'u 2019-02-23 10:12',
         # 'q 2019-02',
         # 'q 2019-02-23',
