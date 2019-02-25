@@ -151,10 +151,10 @@ def check_format(content):
     all_command = ["?", "r", "u", "q", "qa", "p", "pa"]
     input_params = content.split(' ')
     response = dict()
-    if input_params[0] not in all_command:
+    if input_params[0].lower() not in all_command:
         response['error_code'] = RECORD_FORMAT_ERROR
     else:
-        response['command'] = input_params[0]
+        response['command'] = input_params[0].lower()
         if len(input_params) == 1:
             timestr = None
         else:
