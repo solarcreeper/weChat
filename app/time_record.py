@@ -30,11 +30,11 @@ def get_response(params, collection, user):
     if params['command'] == 'q':
         return process_command_q(collection, params['time'], user)
     if params['command'] == 'qa':
-        return process_command_p(collection, params['time'], user)
+        return process_command_qa(collection, params['time'], user)
     if params['command'] == 'p':
         return process_command_p(collection, params['time'], user)
     if params['command'] == 'pa':
-        return process_command_p(collection, params['time'], user)
+        return process_command_pa(collection, params['time'], user)
 
 
 def process_command_r(db_collection, str_time, user):
