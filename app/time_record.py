@@ -50,9 +50,10 @@ def process_command_u(db_collection, str_time, user):
     if is_valid_date_format(str_time, "%Y-%m-%d %H:%M:%S"):
         str_time = str_time[:-3]
     if is_valid_date_format(str_time, "%Y-%m-%d %H:%M"):
-        logger.info("new record: user:%s str_time:%s" % (user, str_time))
-        db_collection.save(format_data(user, str_time))
-        return u'新增记录：%s' % str_time + ':00'
+        format_time = time.strftime("%Y-%m-%d %H:%M",time.strptime(str_time, "%Y-%m-%d %H:%M"))
+        logger.info("new record: user:%s str_time:%s" % (user, format_time))
+        db_collection.save(format_data(user, format_time))
+        return u'新增记录：%s' % format_time + ':00'
     else:
         logger.info("param format error: user:%s str_time:%s" % (user, str_time + ':00'))
         return u'格式错误\r\n{u datetime 强制记录指定时间: u 2019-01-01 12:12}'
@@ -214,26 +215,27 @@ if __name__ == '__main__':
     test()
     from app.views import db
 
-    collection = db.test
-    collection.drop()
-    from_user = 'test'
+    collection = db.users
+    from_user = 'ogWVh0d8gNxPxC7-6db0EeXlo03g'
     test_command = [
-        '?',
-        'r',
-        'q',
-        'u 2019-02-24 10:12:11',
-        'u 2019-02-24 12:12',
-        'u 2019-02-24 14:12',
-        'u 2019-02-24 15:12',
-        'u 2019-02-25 10:12',
-        'u 2019-02-25 12:12',
-        'u 2019-02-25 13:12',
-        'u 2019-02-25 14:12',
-        'u 2019-02-25 20:12:12',
-        'p',
-        'p 2019-02-25',
-        'p 2019-02',
-        'pa',
+        'u 2019-2-24 10:12:11',
+        # 'q',
+        # 'qa',
+        # 'p',
+        # 'pa',
+        # 'u 2019-02-24 10:12:11',
+        # 'u 2019-02-24 12:12',
+        # 'u 2019-02-24 14:12',
+        # 'u 2019-02-24 15:12',
+        # 'u 2019-02-25 10:12',
+        # 'u 2019-02-25 12:12',
+        # 'u 2019-02-25 13:12',
+        # 'u 2019-02-25 14:12',
+        # 'u 2019-02-25 20:12:12',
+        # 'p',
+        # 'p 2019-02-25',
+        # 'p 2019-02',
+        # 'pa',
         # 'u 2019-02-23 10:12',
         # 'q 2019-02',
         # 'q 2019-02-23',
